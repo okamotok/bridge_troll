@@ -6,7 +6,7 @@ class User < ActiveRecord::Base
          :token_authenticatable, :confirmable, :timeoutable
 
   has_many :authentications, inverse_of: :user, dependent: :destroy
-  has_many :rsvps, conditions: { user_type: 'User' }, dependent: :destroy
+  has_many :rsvps, -> { where user_type: 'User' }, dependent: :destroy
   has_many :events, through: :rsvps
 
   has_one :profile, dependent: :destroy

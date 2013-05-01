@@ -17,16 +17,16 @@ class Event < ActiveRecord::Base
 
   has_many :attendee_rsvps, class_name: 'Rsvp', inverse_of: :event, conditions: { role_id: [Role::STUDENT.id, Role::VOLUNTEER.id], waitlist_position: nil }
 
-  has_many :student_rsvps, class_name: 'Rsvp', inverse_of: :event, conditions: { role_id: Role::STUDENT.id, waitlist_position: nil }
-  has_many :student_waitlist_rsvps, class_name: 'Rsvp', inverse_of: :event, conditions: "role_id = #{Role::STUDENT.id} AND waitlist_position IS NOT NULL"
+  has_many :student_rsvps, -> { where(role_id: Role::STUDENT.id, waitlist_position: nil) }, class_name: 'Rsvp', inverse_of: :event
+  has_many :student_waitlist_rsvps, -> { where("role_id = #{Role::STUDENT.id} AND waitlist_position IS NOT NULL") }, class_name: 'Rsvp', inverse_of: :event
   has_many :students, through: :student_rsvps, source: :user, source_type: 'User'
   has_many :legacy_students, through: :student_rsvps, source: :user, source_type: 'MeetupUser'
 
-  has_many :volunteer_rsvps, class_name: 'Rsvp', inverse_of: :event, conditions: { role_id: Role::VOLUNTEER.id }
+  has_many :volunteer_rsvps, -> { where(role_id: Role::VOLUNTEER.id) }, class_name: 'Rsvp', inverse_of: :event
   has_many :volunteers, through: :volunteer_rsvps, source: :user, source_type: 'User'
   has_many :legacy_volunteers, through: :volunteer_rsvps, source: :user, source_type: 'MeetupUser'
 
-  has_many :organizer_rsvps, class_name: 'Rsvp', inverse_of: :event, conditions: { role_id: Role::ORGANIZER.id }
+  has_many :organizer_rsvps, -> { where(role_id: Role::ORGANIZER.id) }, class_name: 'Rsvp', inverse_of: :event
   has_many :organizers, through: :organizer_rsvps, source: :user, source_type: 'User'
   has_many :legacy_organizers, through: :organizer_rsvps, source: :user, source_type: 'MeetupUser'
 
