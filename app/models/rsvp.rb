@@ -127,7 +127,7 @@ class Rsvp < ActiveRecord::Base
 
   def self.attendances_for(user_type)
     attendances = {}
-    Rsvp.where(user_type: user_type).select('user_id, role_id, count(*) count').group('role_id, user_id').find_each do |rsvp_group|
+    Rsvp.where(user_type: user_type).select('id, user_id, role_id, count(*) count').group('role_id, user_id').find_each do |rsvp_group|
       attendances[rsvp_group.user_id] ||= Role.empty_attendance.clone
       attendances[rsvp_group.user_id][rsvp_group.role_id] = rsvp_group.count.to_i
     end
